@@ -9,14 +9,18 @@ import { proposeTransaction } from "@utils/proposeSafeTransaction"
 export default async function onMerge(payload: PullRequestEvent) {
   const connection: Connection = await getConnection(payload.repository.id)
   const { slicerId, safeAddress } = connection
+  console.log(1)
+
   const pinnedBotComment = await getPinnedComment(
     <PullRequestEvent & IssueCommentEvent>payload
   )
 
+  console.log(2)
   if (pinnedBotComment) {
     const accountsToReslice = await formatAccountsToReslice(
       pinnedBotComment.body
     )
+    console.log(3)
 
     if (accountsToReslice.length) {
       const status = await proposeTransaction(
@@ -24,6 +28,7 @@ export default async function onMerge(payload: PullRequestEvent) {
         safeAddress,
         slicerId
       )
+      console.log(4)
 
       const message =
         status == 201
